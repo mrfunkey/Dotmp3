@@ -27,6 +27,11 @@ public class Mp3Import extends JFrame implements ActionListener {
     private JLabel artistLabel;
     private JLabel albumLabel;
     private JLabel yearLabel;
+    private JLabel defArtworkLabel;
+    private ImageIcon defArtwork;
+    private java.net.URL defArtworkURL;
+    private JButton submitButton;
+    private JButton cancelButton;
 
 
     public Mp3Import(){
@@ -56,11 +61,26 @@ public class Mp3Import extends JFrame implements ActionListener {
         gbc.weighty = 1.0;
         panel.add(new JLabel(""), gbc);
 
-        artLabel = new JLabel("Artwork");
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.insets = new Insets(20, 0, 5, 0);
-        panel.add(artLabel, gbc);
+        defArtworkURL = getClass().getResource("/default_artwork.png");
+
+        if  (defArtworkURL != null) {
+            ImageIcon tempIMG = new ImageIcon(defArtworkURL);
+            Image scaledIMG = tempIMG.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+            artLabel = new JLabel();
+            artLabel.setIcon(new ImageIcon(scaledIMG));
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gbc.insets = new Insets(20, 0, 5, 0);
+            panel.add(artLabel, gbc);
+        }
+        else{
+            artLabel = new JLabel("Artwork");
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gbc.insets = new Insets(20, 0, 5, 0);
+            panel.add(artLabel, gbc);
+        }
 
         titleLabel = new JLabel("");
         gbc.gridx = 0;
@@ -73,6 +93,24 @@ public class Mp3Import extends JFrame implements ActionListener {
         gbc.gridy = 5;
         gbc.insets = new Insets(0, 0, 5, 0);
         panel.add(artistLabel, gbc);
+
+        albumLabel = new  JLabel("");
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        panel.add(albumLabel, gbc);
+
+        yearLabel = new  JLabel("");
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        panel.add(yearLabel, gbc);
+
+        submitButton = new JButton("Submit");
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        panel.add(submitButton, gbc);
 
         add(panel);
         setVisible(true);
@@ -94,7 +132,10 @@ public class Mp3Import extends JFrame implements ActionListener {
                     artistLabel.setText("Artist: " + artist);
 
                     album = tag.getFirst(FieldKey.ALBUM);
+                    albumLabel.setText("Album: " + album);
+
                     year = tag.getFirst(FieldKey.YEAR);
+                    yearLabel.setText("Year: " + year);
 
                     Artwork mp3Artwork = tag.getFirstArtwork();
                     if (mp3Artwork != null){
@@ -102,7 +143,7 @@ public class Mp3Import extends JFrame implements ActionListener {
 
                         ImageIcon imageIcon = new ImageIcon(bytes);
 
-                        Image scaledImage = imageIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                        Image scaledImage = imageIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 
                         artLabel.setIcon(new ImageIcon(scaledImage));
                         artLabel.setText("");
